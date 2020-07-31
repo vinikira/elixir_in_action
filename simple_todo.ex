@@ -12,5 +12,5 @@ defmodule TodoList do
 
   def entries(todo_list, date) do
     Map.get(todo_list, date, [])
-    end
+  end
 end
