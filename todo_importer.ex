@@ -52,3 +52,29 @@ defmodule TodoList do
     %__MODULE__{todo_list | entries: new_entries}
   end
 end
+
+defmodule TodoList.CsvImporter do
+  def import(csv_path) do
+    File.stream!(csv_path)
+    |> Stream.map(&String.replace(&1, "\n", ""))
+    |> Stream.map(&String.split(&1, ","))
+    |> Stream.map(&parse_line/1)
+    |> Enum.map(&convert_to_entry/1)
+    |> TodoList.new()
+  end
+
+  defp parse_line([date, title]) do
+    [year, month, date] =
+      date
+      |> String.split("/")
+      |> Enum.map(&String.to_integer/1)
+
+    {{year, month, date}, String.trim(title)}
+  end
+
+  defp convert_to_entry({{year, month, date}, title}) do
+    {:ok, date} = Date.new(year, month, date)
+
+    %{date: date, title: title}
+  end
+end
