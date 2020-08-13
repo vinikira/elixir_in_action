@@ -11,6 +11,10 @@ defmodule Todo.List do
     )
   end
 
+  def size(todo_list) do
+    Map.size(todo_list.entries)
+  end
+
   def add_entry(todo_list, entry) do
     entry = Map.put(entry, :id, todo_list.auto_id)
 
